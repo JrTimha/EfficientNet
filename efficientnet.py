@@ -25,10 +25,9 @@ if gpus:
     # Memory growth must be set before GPUs have been initialized
     print(e)
 # In[ ]:
-"""
 ## Import EfficientNet and Choose EfficientNet Model
 ## loading pretrained conv base model
-## define input height and width (B0: 224 | B1: 240 | B2: 260 | B3: 300 | B4: 380 | B5: 456) """
+## define input height and width (B0: 224 | B1: 240 | B2: 260 | B3: 300 | B4: 380 | B5: 456)
 width = 299
 height = 299
 input_shape = (height, width, 3)
@@ -46,7 +45,7 @@ test_dir = PATH+'/test'
 batch_size = 32
 
 # In[ ]:
-"""# Auflistung der Trainingsdaten"""
+# Print dataset informations
 dataset_train = os.listdir(train_dir)
 print("Classes in this Dataset: ", dataset_train)
 print("Number of Classes in this Dataset: ", len(dataset_train))
@@ -64,7 +63,7 @@ print(dataframe.head())
 print(dataframe.tail())
 print("Total Number of Images in this Dataset: ", len(dataframe))
 # In[ ]:
-"""# Abschnitt 1: Vorverarbeitung"""
+# Section 1: Preprocessing
 # DO NOT rescale EfficientNet!
 # Preprocessing function with Data Augmentation:
 train_datagen = ImageDataGenerator(validation_split=0.2,
@@ -94,7 +93,7 @@ validation_generator = train_datagen.flow_from_directory(
     class_mode='categorical')
 
 # In[ ]:
-"""# Abschnitt 2: CNN-Modellierung"""
+# Section 2: CNN-Modelling
 
 epochs = 10  # Change this for longer training
 NUM_TRAIN = sum([len(files) for r, d, files in os.walk(train_dir)])
@@ -126,7 +125,7 @@ print('This is the number of trainable layers '
       'after freezing the conv base:', len(model.trainable_weights))
 
 # In[ ]:
-"""# Abschnitt 3: Training"""
+# Section 3: Training
 
 model.compile(loss='categorical_crossentropy',
               optimizer=tf.keras.optimizers.Adam(learning_rate=0.01),
@@ -142,7 +141,7 @@ history = model.fit_generator(                      # Starting the training algo
     use_multiprocessing=False)
 
 # In[ ]:
-"""## Fine Tuning EfficientNet"""
+# Fine Tuning EfficientNet
 save_path = f'./models/{model_name}10.h5'
 os.makedirs("./models", exist_ok=True)
 model.save(save_path)
@@ -173,7 +172,7 @@ history = model.fit_generator(
     use_multiprocessing=False)
 
 # In[ ]:
-"""## Abschnitt 4: Abspeichern + Metriken"""
+# Section 4: Saving model and metrics
 
 # Get staticstics about training results:
 acc = history.history['acc']
@@ -203,7 +202,7 @@ os.makedirs("./models", exist_ok=True)
 model.save(save_path)
 
 # In[ ]:
-"""# Abschnitt 5: Testing"""
+# Section 5: Testing
 
 # Stream image batches of the testset:
 test_datagen = ImageDataGenerator()
